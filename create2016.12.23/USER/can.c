@@ -5,7 +5,7 @@
 
 
 /*****全局变量********/
-u16 Wheel_Speed[8]={0,1,2,3,4,5,6,7};       //存储8个轮子的速度
+u16 Wheel_Speed[8]={7,6,5,4,3,2,1,0};       //存储8个轮子的速度
 
 /*****全局变量********/
 
@@ -55,10 +55,10 @@ void CAN1_Configuration(void)
     can.CAN_RFLM = DISABLE;
     can.CAN_TXFP = ENABLE;
     can.CAN_Mode = CAN_Mode_Normal;
-    can.CAN_SJW  = CAN_SJW_1tq;
-    can.CAN_BS1 = CAN_BS1_9tq;
+    can.CAN_SJW  = CAN_SJW_2tq;
+    can.CAN_BS1 = CAN_BS1_6tq;
     can.CAN_BS2 = CAN_BS2_4tq;
-    can.CAN_Prescaler = 3;   //CAN BaudRate 42/(1+9+4)/3=1Mbps
+    can.CAN_Prescaler = 7;   //CAN BaudRate 42/(1+9+4)/3=1Mbps
     CAN_Init(CAN1, &can);
 
     can_filter.CAN_FilterNumber=0;
@@ -85,6 +85,7 @@ void CAN1_TX_IRQHandler(void) //CAN TX
 			 CAN_ClearITPendingBit(CAN1,CAN_IT_TME);
 			 can_tx_success_flag=1;
     }
+		printf("\n主机发送成功\n");
 }
 
 
@@ -95,7 +96,7 @@ void CAN_SetMsg(void)
  // TxMessage.ExtId=0x200;					 //使用的扩展ID
   TxMessage.IDE=CAN_ID_STD;					 //扩展模式
   TxMessage.RTR=CAN_RTR_DATA;				 //发送的是数据
-  TxMessage.DLC=0x08;							 //数据长度为2字节
+  TxMessage.DLC=0x08;							   //数据长度为2字节
   TxMessage.Data[0]=Wheel_Speed[0];
   TxMessage.Data[1]=Wheel_Speed[1];
   TxMessage.Data[2]=Wheel_Speed[2];
@@ -103,7 +104,7 @@ void CAN_SetMsg(void)
   TxMessage.Data[4]=Wheel_Speed[4];
   TxMessage.Data[5]=Wheel_Speed[5];
   TxMessage.Data[6]=Wheel_Speed[6];
-  TxMessage.Data[7]=Wheel_Speed[7];;
+  TxMessage.Data[7]=Wheel_Speed[7];
   CAN_Transmit(CAN1, &TxMessage);
 }
 
@@ -112,9 +113,7 @@ void CAN1_RX0_IRQHandler(void)
 {
     CanRxMsg rx_message;    
     u8 i;                  //测试用        
-	
-		CAN_SetMsg();//发送底盘数据
-	
+		printf("接收到从机信息\n");	
     if (CAN_GetITStatus(CAN1,CAN_IT_FMP0)!= RESET) 
 		{
         CAN_ClearITPendingBit(CAN1, CAN_IT_FMP0);
@@ -127,6 +126,8 @@ void CAN1_RX0_IRQHandler(void)
 					printf("%d",rx_message.Data[i]);
 				}
 		}
+
+		//CAN_SetMsg();//发送数据
 }
 
 

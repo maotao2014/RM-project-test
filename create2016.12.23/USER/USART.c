@@ -1,10 +1,9 @@
-#include "usart2.h"
+#include "USART.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 
-u16 USART2_RecData;
- void usart2_init(void)
+ void usart1_init(void)
 {
 	
 	//声明结构体 
@@ -14,11 +13,11 @@ u16 USART2_RecData;
 	 
 	//开启时钟 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE); //使能GPIOA时钟
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE);//使能USART2时钟
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE);//使能USART1时钟
  
 	//串口1对应引脚复用映射
-	GPIO_PinAFConfig(GPIOA,GPIO_PinSource10,GPIO_AF_USART1); //GPIOA2复用为USART2
-	GPIO_PinAFConfig(GPIOA,GPIO_PinSource9 ,GPIO_AF_USART1); //GPIOA3复用为USART2
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource10,GPIO_AF_USART1); //GPIOA10复用为USART1
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource9 ,GPIO_AF_USART1); //GPIOA9复用为USART1
 	 
 	//USART2端口配置
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9|GPIO_Pin_10; //GPIOA2
@@ -42,15 +41,15 @@ u16 USART2_RecData;
 	USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
-	USART_Init(USART1, &USART_InitStructure); //初始化串口2
+	USART_Init(USART1, &USART_InitStructure); //初始化串口1
 		
-	USART_Cmd(USART1, ENABLE);  //使能串口2  
+	USART_Cmd(USART1, ENABLE);  //使能串口1  
 
 	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启相关中断
 
 	//Usart2 NVIC 配置
-  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;//串口2中断通道
+  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;//串口1中断通道
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=1;//抢占优先级3
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority =2;		//子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能

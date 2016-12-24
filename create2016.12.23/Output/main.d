@@ -38,9 +38,7 @@
 ..\output\main.o: led.h
 ..\output\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\output\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-..\output\main.o: usart1.h
-..\output\main.o: usart2.h
-..\output\main.o: usart4.h
+..\output\main.o: USART.h
 ..\output\main.o: dma.h
 ..\output\main.o: pwm2.h
 ..\output\main.o: can.h

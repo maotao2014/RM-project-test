@@ -3,9 +3,7 @@
 #include "led.h" 
 #include "stdio.h"
 #include "stdlib.h"
-#include "usart1.h"
-#include "usart2.h"
-#include "usart4.h"
+#include "USART.h"
 #include "dma.h"
 #include "pwm2.h"
 #include "can.h"
@@ -17,10 +15,9 @@
 
 int main(void)
 {	
-	u16  USART2_RecData;
 	delay_init(168);                               //延时函数初始化   168为系统时钟频率 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2	//usart1_init();
-	usart2_init();                                 //串口2初始化,用于与PC机通信
+	usart1_init();                                 //串口2初始化,用于与PC机通信
 	CAN1_Configuration();
 
 	//USART通过DMA将信息传给内存，再进行按键解码
@@ -34,18 +31,12 @@ int main(void)
 	//经can得到的速度值进行速度换闭环控;两者的闭环控制为同时进行时电流的AD采样的值快于can数据帧的数据值,
 	//所以内外环同时进行，在未得到速度值时以上次的速度值进行闭环控制；
   
-
+	printf(" CAN通信测试");
+	printf("\n主机\n");
 	while(1)
 	{
-//		if(USART2_RX_Flag==1)
-//		{
-//					USART2_RecData = USART_ReceiveData(USART2);  //接受消息
-//					USART_SendData(USART2,USART2_RecData);       //发送接受到的数据
-//		}		
-			delay_ms(200);
-			USART_SendData(USART2,'0'); 
-			USART_SendData(USART2,'2');
-			USART_SendData(USART2,'1'); 
+			delay_ms(200);	
+		  CAN_SetMsg();
 	}
 }
 
@@ -54,10 +45,10 @@ int main(void)
 int fputc(int ch, FILE *f)
 {
 		/* 发送一个字节数据到USART1 */
-		USART_SendData(USART2, (uint8_t) ch);
+		USART_SendData(USART1, (uint8_t) ch);
 		
 		/* 等待发送完毕 */
-		while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);		
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);		
 	
 		return (ch);
 }
