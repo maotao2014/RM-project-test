@@ -6,7 +6,7 @@
 
 void usart2_init(void);
 
-
+extern u8 USART2_RX_Flag;
 
 extern u8 Res1;
 //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 
