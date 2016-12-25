@@ -31,11 +31,11 @@ int main(void)
 	//经can得到的速度值进行速度换闭环控;两者的闭环控制为同时进行时电流的AD采样的值快于can数据帧的数据值,
 	//所以内外环同时进行，在未得到速度值时以上次的速度值进行闭环控制；
   
-	printf(" CAN通信测试");
+	printf("CAN通信测试");
 	printf("\n主机\n");
 	while(1)
 	{
-			delay_ms(200);	
+			delay_ms(500);	
 		  CAN_SetMsg();
 	}
 }

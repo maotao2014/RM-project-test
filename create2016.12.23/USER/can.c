@@ -58,7 +58,7 @@ void CAN1_Configuration(void)
     can.CAN_SJW  = CAN_SJW_2tq;
     can.CAN_BS1 = CAN_BS1_6tq;
     can.CAN_BS2 = CAN_BS2_4tq;
-    can.CAN_Prescaler = 7;   //CAN BaudRate 42/(1+9+4)/3=1Mbps
+    can.CAN_Prescaler = 7;   //CAN BaudRate 42/(1+6+4)/7=1Mbps
     CAN_Init(CAN1, &can);
 
     can_filter.CAN_FilterNumber=0;
@@ -120,11 +120,15 @@ void CAN1_RX0_IRQHandler(void)
         CAN_Receive(CAN1, CAN_FIFO0, &rx_message);       
        	
 				//打印can接受到的数据，检查是否正常传输
-				printf("%d",rx_message.ExtId);
-				for(i=0;i<8;i++)
+				printf("%d\n",rx_message.StdId);
+				if(rx_message.StdId==0x202)
 				{
-					printf("%d",rx_message.Data[i]);
+					for(i=0;i<8;i++)
+					{
+						printf("%d",rx_message.Data[i]);
+					}				
 				}
+
 		}
 
 		//CAN_SetMsg();//发送数据
